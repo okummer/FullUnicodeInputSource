@@ -5,9 +5,7 @@ import org.junit.Test;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
-import java.util.HashSet;
 
 import static org.junit.Assert.assertEquals;
 
@@ -211,26 +209,6 @@ public class FullUnicodeXmlReaderTest {
   @Test
   public void testGuessEncodingISO885915() {
     doTestEncoding("ISO-8859-15", false);
-  }
-
-  /**
-   * Test encoding detection with an umlaut for all encodings that
-   * support encoding umlauts (excluding known exceptions).
-   *
-   * @throws UnsupportedEncodingException
-   */
-  @Test
-  public void testGuessEncodingsWithAUmlaut() throws UnsupportedEncodingException {
-    for (String charset : new HashSet<String>(Charset.availableCharsets().keySet())) {
-      // Compound text is an extremely verbose encoding not suitable for XML storage.
-      if (Charset.forName(charset).canEncode() && !charset.contains("COMPOUND_TEXT")) {
-        // Check that all necessary characters can be encoded.
-        String testString = "\u00c4ax<&?'";
-        if (testString.equals(new String(testString.getBytes(charset), charset))) {
-          doTestEncoding(charset, false);
-        }
-      }
-    }
   }
 
   @Test

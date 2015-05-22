@@ -35,7 +35,7 @@ public class FullUnicodeInputSourceTest {
     byte[] inputBytes = "<elem attr1=\"\uD83D\uDE02\" attr2=\"\uD83D\uDE02\"/>".getBytes(Charset.forName("UTF-8"));
     ByteArrayInputStream inputStream = new ByteArrayInputStream(inputBytes);
     InputSource inputSource = new FullUnicodeInputSource(inputStream);
-    checkInputSource("<elem attr1=\"&#128514;\" attr2=\"&#128514;\"/>", inputSource);
+    checkInputSource("<elem attr1=\"\uD83D\uDE02\" attr2=\"\uD83D\uDE02\"/>", inputSource);
   }
 
   // Tests for the source configuration
@@ -143,6 +143,9 @@ public class FullUnicodeInputSourceTest {
     if (headerEnd != -1) {
       stringResult = stringResult.substring(headerEnd + 2);
     }
+    // Normalize the test character, which might be represented as an entity
+    // or as a character.
+    stringResult = stringResult.replace("&#128514;", "\uD83D\uDE02");
 
     assertEquals(expected, stringResult);
   }
